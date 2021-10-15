@@ -12,11 +12,12 @@
 #include <vector>
 #include <set>
 #include <iterator>
+#include  <cctype>
 
 enum class ErrorCode {OK = 0, BadCharacter, BadFormat, DivideBy0, SqrtOfNegativeNumber, ModuleOfNonIntegerValue};
-ErrorCode process(std::string input, double* out);
+ErrorCode process(const std::string input, double* out);
 // returns true if string is a number else false
-bool isNumber(std::string);
+bool isNumber(const std::string);
 // return true if c is an element of set
 bool isValidCharacter(char c, const std::set<char>& set);
 bool isInteger(double val);

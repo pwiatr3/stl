@@ -13,7 +13,7 @@ std::map<char, std::function<double(double, double)>> mapOfOperations = {
 
 std::function<int(int)> foo = [](int a){ return a; };
 
-bool isNumber(std::string s) {
+bool isNumber(const std::string s) {
     // checks if first character is a digit or minus sign '-'
     if(!(std::isdigit(s[0]) || s[0] == '-')) {
         return false;    
@@ -31,25 +31,18 @@ bool isNumber(std::string s) {
                                     bool condition = !std::isdigit(c) && c !='.'; 
                                     return condition; 
                                                         });    
-    if(it != end(s)) {
-        return false;
-    }
-
-    return true;
+    return it == end(s);
 }
 
 bool isValidCharacter(char c, const std::set<char>& set) {
-    if(set.count(c) > 0) {
-        return true;
-    }      
-    return false;
+    return set.count(c) > 0;
 }
 
 bool isInteger(double val) {
     return std::floor(val) == val;
 }
 
-ErrorCode process(std::string input, double* out) {
+ErrorCode process(const std::string input, double* out) {
     std::set<char> validChar = {'+', '-', '*', '/', '%', '!', '^', '$', '.', ','};
     std::set<char> operators = {'+', '-', '*', '/', '%', '!', '^', '$'};
     char typeOfOperation;
@@ -60,22 +53,14 @@ ErrorCode process(std::string input, double* out) {
     std::string temp;
 
     // deleting spaces in input string
-    std::copy_if(begin(input), end(input), std::back_inserter(inputNoSpace), [](char c){ 
-                                                    if(c == ' ') {
-                                                        return false; 
-                                                    }
-                                                    else {
-                                                        return true;    
-                                                    }
+    std::copy_if(begin(input), end(input), std::back_inserter(inputNoSpace), [](char c) { 
+                                                    return !std::isspace(c);
                                                 });
 
 
     // checks if string contains invalid character, if true returns iterator to this character
     auto it = std::find_if_not(begin(inputNoSpace), end(inputNoSpace), [validChar](char c){
-                                                if(std::isdigit(c) || isValidCharacter(c, validChar)) {
-                                                    return true;    
-                                                }
-                                                return false;
+                                                    return std::isdigit(c) || isValidCharacter(c, validChar);
                                                             });
     if(it != end(inputNoSpace)) {
         std::cout << "Invalid character: " << *it << '\n';
